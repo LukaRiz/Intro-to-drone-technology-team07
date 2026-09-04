@@ -7,9 +7,10 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from math import pi
 
+
 class imu_visualize():
 	def __init__(self):
-		#rotation
+		#rotation 
 		self.x_axis = 0.0
 		self.y_axis = 0.0
 		self.z_axis = 0.0 

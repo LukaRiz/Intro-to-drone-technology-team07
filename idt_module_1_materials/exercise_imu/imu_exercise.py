@@ -58,9 +58,9 @@ for line in f:
 
 	if imuType == 'sparkfun_razor':
 		# import data from a SparkFun Razor IMU (SDU firmware)
-		acc_x = int(csv[2]) / 1000.0 * 4 * 9.82;
-		acc_y = int(csv[3]) / 1000.0 * 4 * 9.82;
-		acc_z = int(csv[4]) / 1000.0 * 4 * 9.82;
+		acc_x = int(csv[3]) / 1000.0 * 4 * 9.82;
+		acc_y = int(csv[4]) / 1000.0 * 4 * 9.82;
+		acc_z = int(csv[5]) / 1000.0 * 4 * 9.82;
 		gyro_x = int(csv[5]) * 1/14.375 * pi/180.0;
 		gyro_y = int(csv[6]) * 1/14.375 * pi/180.0;
 		gyro_z = int(csv[7]) * 1/14.375 * pi/180.0;
@@ -89,7 +89,7 @@ for line in f:
 	# gyro_z	Angular velocity measured about the z axis
 
 	## Insert your code here ##
-	
+	pitch = atan2 (acc_x, sqrt (acc_y**2 + acc_z**2))
 		
 
 	myValue = pitch # relevant for the first exercise, then change this.

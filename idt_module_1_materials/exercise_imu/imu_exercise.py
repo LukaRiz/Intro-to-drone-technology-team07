@@ -7,9 +7,9 @@
 ##### Insert initialize code below ###################
 
 ## Uncomment the file to read ##
-#fileName = 'imu_razor_data_static.txt'
-fileName = 'imu_razor_data_pitch_55deg.txt'
-fileName = 'imu_razor_data_roll_65deg.txt'
+fileName = 'data/imu_razor_data_roll_65deg.txt' # Task 3.2.4: low-pass filtering
+#fileName = 'data/imu_razor_data_pitch_55deg.txt' # Task 3.2.1: calculate pitch angle
+#fileName = 'data/imu_razor_data_static.txt' # Task 3.2.3: accelerometer noise
 #fileName = 'imu_razor_data_yaw_90deg.txt'
 
 ## IMU type
@@ -18,10 +18,16 @@ imuType = 'sparkfun_razor'
 
 ## Variables for plotting ##
 showPlot = True
-plotData = []
+plotDataPitch = []
+plotDataRoll = []
+plotDataPitchFiltered = []
+plotDataRollFiltered = []
 
 ## Initialize your variables here ##
 myValue = 0.0
+filterAlpha = 0.1
+filteredPitch = None
+filteredRoll = None
 
 
 
@@ -88,14 +94,22 @@ for line in f:
 	# gyro_y	Angular velocity measured about the y axis
 	# gyro_z	Angular velocity measured about the z axis
 
-	## Insert your code here ##
+	## Task 3.2.3: calculate pitch and roll from accelerometer values ##
+	pitch = atan2 (acc_y, sqrt (acc_x**2 + acc_z**2))
 	roll = atan2 (acc_x, sqrt (acc_y**2 + acc_z**2))
-		
 
-	myValue = roll # roll angle from equation 29 in Tilt Sensing Using a Three-Axis Accelerometer.
+	# Task 3.2.4: first-order low-pass filter.
+	if filteredPitch is None:
+		filteredPitch = pitch
+		filteredRoll = roll
+	else:
+		filteredPitch = filterAlpha*pitch + (1-filterAlpha)*filteredPitch
+		filteredRoll = filterAlpha*roll + (1-filterAlpha)*filteredRoll
 
-	# in order to show a plot use this function to append your value to a list:
-	plotData.append (myValue*180.0/pi)
+	plotDataPitch.append (pitch*180.0/pi)
+	plotDataRoll.append (roll*180.0/pi)
+	plotDataPitchFiltered.append (filteredPitch*180.0/pi)
+	plotDataRollFiltered.append (filteredRoll*180.0/pi)
 
 	######################################################
 
@@ -104,12 +118,20 @@ f.close()
 
 # show the plot
 if showPlot == True:
-	plt.plot(plotData)
-	plt.xlabel('Sample')
-	plt.ylabel('Roll angle (degrees)')
-	plt.title('Roll angle from accelerometer data')
+	fig, axes = plt.subplots(2, 1, sharex=True)
+	axes[0].plot(plotDataPitch, alpha=0.35, label='Raw pitch')
+	axes[0].plot(plotDataPitchFiltered, label='Filtered pitch')
+	axes[0].set_ylabel('Pitch (degrees)')
+	axes[0].legend()
+	axes[1].plot(plotDataRoll, alpha=0.35, label='Raw roll')
+	axes[1].plot(plotDataRollFiltered, label='Filtered roll')
+	axes[1].set_xlabel('Sample')
+	axes[1].set_ylabel('Roll (degrees)')
+	axes[1].legend()
+	fig.suptitle('Low-pass filtering of pitch and roll')
+	fig.tight_layout()
 	plt.grid(True)
-	plt.savefig('pics/imu_exercise_roll_65deg_plot.png')
+	plt.savefig('pics/imu_exercise_low_pass_filter_plot.png')
 	plt.show()
 
 

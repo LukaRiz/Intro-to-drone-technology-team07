@@ -9,7 +9,7 @@
 ## Uncomment the file to read ##
 #fileName = 'imu_razor_data_static.txt'
 fileName = 'imu_razor_data_pitch_55deg.txt'
-#fileName = 'imu_razor_data_roll_65deg.txt'
+fileName = 'imu_razor_data_roll_65deg.txt'
 #fileName = 'imu_razor_data_yaw_90deg.txt'
 
 ## IMU type
@@ -58,9 +58,9 @@ for line in f:
 
 	if imuType == 'sparkfun_razor':
 		# import data from a SparkFun Razor IMU (SDU firmware)
-		acc_x = int(csv[3]) / 1000.0 * 4 * 9.82;
-		acc_y = int(csv[4]) / 1000.0 * 4 * 9.82;
-		acc_z = int(csv[5]) / 1000.0 * 4 * 9.82;
+		acc_x = int(csv[2]) / 1000.0 * 4 * 9.82;
+		acc_y = int(csv[3]) / 1000.0 * 4 * 9.82;
+		acc_z = int(csv[4]) / 1000.0 * 4 * 9.82;
 		gyro_x = int(csv[5]) * 1/14.375 * pi/180.0;
 		gyro_y = int(csv[6]) * 1/14.375 * pi/180.0;
 		gyro_z = int(csv[7]) * 1/14.375 * pi/180.0;
@@ -89,10 +89,10 @@ for line in f:
 	# gyro_z	Angular velocity measured about the z axis
 
 	## Insert your code here ##
-	pitch = atan2 (acc_x, sqrt (acc_y**2 + acc_z**2))
+	roll = atan2 (acc_x, sqrt (acc_y**2 + acc_z**2))
 		
 
-	myValue = pitch # relevant for the first exercise, then change this.
+	myValue = roll # roll angle from equation 29 in Tilt Sensing Using a Three-Axis Accelerometer.
 
 	# in order to show a plot use this function to append your value to a list:
 	plotData.append (myValue*180.0/pi)
@@ -105,7 +105,11 @@ f.close()
 # show the plot
 if showPlot == True:
 	plt.plot(plotData)
-	plt.savefig('imu_exercise_plot.png')
+	plt.xlabel('Sample')
+	plt.ylabel('Roll angle (degrees)')
+	plt.title('Roll angle from accelerometer data')
+	plt.grid(True)
+	plt.savefig('pics/imu_exercise_roll_65deg_plot.png')
 	plt.show()
 
 

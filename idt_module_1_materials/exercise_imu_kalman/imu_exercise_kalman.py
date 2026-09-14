@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # IMU exercise
@@ -21,7 +20,7 @@ using this command:
 ######################################################
 ## Parameters ########################################
 # name of the file to read ##
-fileName = 'imu_razor_data_pitch_55deg.txt'
+fileName = 'data/imu_razor_data_pitch_55deg.txt'
 
 ## IMU type
 #imuType = 'vectornav_vn100'
@@ -36,6 +35,7 @@ show3DLiveViewInterval = 3
 
 
 # import libraries
+import os
 from math import pi, sqrt, atan2
 import matplotlib.pyplot as plt
 from pylab import ion
@@ -46,20 +46,24 @@ if show3DLiveView:
 ##### Insert initialize code below ###################
 
 # approx. bias values determined by averaging over static measurements
-bias_gyro_x = 0.0 # [rad/measurement]
-bias_gyro_y = 0.0 # [rad/measurement]
-bias_gyro_z = 0.0 # [rad/measurement]
+# (exercise_imu/data/imu_razor_data_static.txt, 5924 samples)
+bias_gyro_x = 0.07529 # [rad/s]
+bias_gyro_y = 0.04172 # [rad/s]
+bias_gyro_z = 0.00081 # [rad/s]
 
-# variances
-gyroVar =
-pitchVar =
+# variances, from the same static measurements
+# gyro x-axis static noise is only 3.36e-6 (rad/s)^2, but that ignores the gyro
+# scale error (~47 deg measured for a 55 deg turn), so the filter lagged badly.
+# 1e-3 was tuned on the pitch_55deg data: ~0.7 deg RMS error, still smooth.
+gyroVar = 1e-3     # [(rad/s)^2]
+pitchVar = 4.55e-5 # [rad^2] accelerometer pitch noise
 
 # Kalman filter start guess
 estAngle = -pi/4.0
-estVar =
+estVar = (pi/4.0)**2 # start guess is poor, so give it a large variance
 
 # Kalman filter housekeeping variables
-gyroVarAcc =
+gyroVarAcc = 0.0 # gyro variance accumulated since the last correction
 
 ######################################################
 
@@ -81,6 +85,7 @@ if os.environ.get("XDG_SESSION_TYPE") == "wayland":
 
 else:
     # open the imu data file
+    os.chdir(os.path.dirname(os.path.abspath(__file__))) # data/ and plots relative to this script
     f = open (fileName, "r")
 
     # initialize variables
@@ -154,27 +159,30 @@ else:
 
         ## Insert your code here ##
 
+        dt = ts_now - ts_prev
+
         # calculate pitch (x-axis) and roll (y-axis) angles
-        pitch =  
-        roll = 
+        pitch = atan2(acc_y, sqrt(acc_x**2 + acc_z**2))
+        roll = atan2(acc_x, sqrt(acc_y**2 + acc_z**2))
 
         # integrate gyro velocities to releative angles
-        gyro_x_rel +=    
-        gyro_y_rel +=
-        gyro_z_rel +=
+        gyro_x_rel += gyro_x*dt
+        gyro_y_rel += gyro_y*dt
+        gyro_z_rel += gyro_z*dt
 
         # Kalman prediction step (we have new data in each iteration)
-
-
-
+        estAngle += gyro_x*dt
+        gyroVarAcc += gyroVar*dt**2
+        estVar += gyroVarAcc
 
         # Kalman correction step (we have new data in each iteration)
-
-
-
+        K = estVar/(estVar + pitchVar)
+        estAngle += K*(pitch - estAngle)
+        estVar *= (1.0 - K)
+        gyroVarAcc = 0.0
 
         # define which value to plot as the Kalman filter estimate
-        kalman_estimate = 
+        kalman_estimate = estAngle
 
 
         # define which value to plot as the absolute value (pitch/roll)

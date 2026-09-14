@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
 
-# sudo apt install python3-opengl
 
 from OpenGL.GL import *
 from OpenGL.GLU import *

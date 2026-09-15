@@ -7,10 +7,10 @@
 ##### Insert initialize code below ###################
 
 ## Uncomment the file to read ##
-fileName = 'data/imu_razor_data_roll_65deg.txt' # Task 3.2.4: low-pass filtering
+#fileName = 'data/imu_razor_data_roll_65deg.txt' # Task 3.2.2: calculate roll angle
 #fileName = 'data/imu_razor_data_pitch_55deg.txt' # Task 3.2.1: calculate pitch angle
-#fileName = 'data/imu_razor_data_static.txt' # Task 3.2.3: accelerometer noise
-#fileName = 'imu_razor_data_yaw_90deg.txt'
+fileName = 'data/imu_razor_data_roll_65deg.txt' # Task 3.2.4: low-pass filtering
+#fileName = 'data/imu_razor_data_roll_65deg.txt' # Task 3.2.4: low-pass filtering
 
 ## IMU type
 #imuType = 'vectornav_vn100'
@@ -94,11 +94,9 @@ for line in f:
 	# gyro_y	Angular velocity measured about the y axis
 	# gyro_z	Angular velocity measured about the z axis
 
-	## Task 3.2.3: calculate pitch and roll from accelerometer values ##
+	## Task 3.2.4: low-pass filter pitch and roll angles ##
 	pitch = atan2 (acc_y, sqrt (acc_x**2 + acc_z**2))
-	roll = atan2 (acc_x, sqrt (acc_y**2 + acc_z**2))
-
-	# Task 3.2.4: first-order low-pass filter.
+	roll = atan2 (-acc_x, sqrt (acc_y**2 + acc_z**2))
 	if filteredPitch is None:
 		filteredPitch = pitch
 		filteredRoll = roll
@@ -118,18 +116,12 @@ f.close()
 
 # show the plot
 if showPlot == True:
-	fig, axes = plt.subplots(2, 1, sharex=True)
-	axes[0].plot(plotDataPitch, alpha=0.35, label='Raw pitch')
-	axes[0].plot(plotDataPitchFiltered, label='Filtered pitch')
-	axes[0].set_ylabel('Pitch (degrees)')
-	axes[0].legend()
-	axes[1].plot(plotDataRoll, alpha=0.35, label='Raw roll')
-	axes[1].plot(plotDataRollFiltered, label='Filtered roll')
-	axes[1].set_xlabel('Sample')
-	axes[1].set_ylabel('Roll (degrees)')
-	axes[1].legend()
-	fig.suptitle('Low-pass filtering of pitch and roll')
-	fig.tight_layout()
+	plt.plot(plotDataRoll, alpha=0.35, label='Raw roll')
+	plt.plot(plotDataRollFiltered, label='Filtered roll')
+	plt.xlabel('Sample')
+	plt.ylabel('Roll angle (degrees)')
+	plt.title('Low-pass filtering of roll angle')
+	plt.legend()
 	plt.grid(True)
 	plt.savefig('pics/imu_exercise_low_pass_filter_plot.png')
 	plt.show()

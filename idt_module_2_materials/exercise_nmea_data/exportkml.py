@@ -167,6 +167,8 @@ class kmlclass:
         self.f.write ('<altitudeMode>absolute</altitudeMode>\n')
       elif altitude == 'relativeToGround': 
         self.f.write ('<altitudeMode>relativeToGround</altitudeMode>\n')
+      elif altitude == 'clampToGround':
+        self.f.write ('<altitudeMode>clampToGround</altitudeMode>\n')
       self.f.write ('<coordinates>\n')
 
     def trksegend(self):

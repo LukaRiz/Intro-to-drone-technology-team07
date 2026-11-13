@@ -35,12 +35,20 @@ from rclpy.node import Node
 from rclpy.qos import ReliabilityPolicy, QoSProfile
 from mavros_msgs.msg import GPSRAW
 from sensor_msgs.msg import NavSatFix
+import time
+import os
 
 class ros_node_class(Node):
     def __init__(self):
         super().__init__('get_global_pos')
 
-        # publishers
+        # CSV logging setup
+        self.csv_filename = 'gnss_track.csv'
+        self.file_exists = os.path.exists(self.csv_filename)
+        self.csv_file = open(self.csv_filename, 'a', buffering=1)
+        if not self.file_exists or os.path.getsize(self.csv_filename) == 0:
+            self.csv_file.write('timestamp,latitude,longitude,altitude,fix\n')
+        self.get_logger().info(f'Logging GNSS positions to {os.path.abspath(self.csv_filename)}')
 
         # subscribers
         self.sub_global_pos = self.create_subscription(
@@ -75,7 +83,11 @@ class ros_node_class(Node):
             fix = "No fix"
         else:
             fix = "Fix ok"
-        self.get_logger().info('/mavros/global_position/raw/fix (GNSS raw): %s %.6f %.6f %.3f WGS84'  % (fix, msg.latitude, msg.longitude, msg.altitude))
+        
+        # Save timestamp, coordinates and fix status to CSV
+        timestamp = time.time()
+        self.csv_file.write(f'{timestamp:.3f},{msg.latitude:.7f},{msg.longitude:.7f},{msg.altitude:.3f},{fix}\n')
+        self.get_logger().info('/mavros/global_position/raw/fix (GNSS raw): %s %.6f %.6f %.3f WGS84 [SAVED]'  % (fix, msg.latitude, msg.longitude, msg.altitude))
 
     def on_gpstatus_gps1_raw_msg(self, msg):
         if msg.fix_type == 0:
@@ -86,6 +98,11 @@ class ros_node_class(Node):
 
     def timer_update(self):
         self.get_logger().info('Timer update')
+
+    def destroy_node(self):
+        if hasattr(self, 'csv_file') and not self.csv_file.closed:
+            self.csv_file.close()
+        super().destroy_node()
 
 def main(args=None):
     rclpy.init(args=args)

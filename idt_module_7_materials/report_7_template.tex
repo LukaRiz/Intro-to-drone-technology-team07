@@ -1,0 +1,194 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Packages and general settings ---
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage{times}
+\usepackage{setspace}
+\setstretch{1.15}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+% --- Header and footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Optional: format web links as footnotes
+\newcommand{\weburl}[1]{\footnote{\url{#1}}}
+
+\begin{document}
+
+% ==============================================================================
+% Front page
+% ==============================================================================
+
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+
+    {\Huge \bfseries Report 7}\\[0.5cm]
+    {\large Course: Introduction to Drone Technology}\\[3cm]
+
+    \textbf{\Large Participating Students:}\\[0.8cm]
+
+    \begin{tabular}{ll}
+        \textbf{Full Name 1:} & Luka Rizman (luriz26@student.sdu.dk) \\
+        \textbf{Full Name 2:} & Matic Kern (maker26@student.sdu.dk) \\
+        \textbf{Full Name 3:} & Adrian Maslak (admas26@student.sdu.dk) \\
+    \end{tabular}
+
+    \vfill
+
+    {\large \textbf{Date:} \today}
+
+    \vspace*{1.5cm}
+\end{titlepage}
+
+% ==============================================================================
+% Main content
+% ==============================================================================
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{section}{3}
+
+% ------------------------------------------------------------------------------
+% 4 Exercises
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4}\quad
+\textbf{Exercises}
+
+% ------------------------------------------------------------------------------
+% 4.1 Record GNSS track
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.1}\quad
+\textbf{Record GNSS track}
+
+% Add two images side by side (replace filename1.png and filename2.png)
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{filename1.png}
+        \caption{Description of the first image.}
+        \label{fig:gnss_track_1}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{filename2.png}
+        \caption{Description of the second image.}
+        \label{fig:gnss_track_2}
+    \end{minipage}
+\end{figure}
+
+
+% ------------------------------------------------------------------------------
+% 4.2 Convert coordinates to UTM
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.2}\quad
+\textbf{Convert coordinates to UTM}
+
+% Add a single image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{filename.png}
+    \caption{Description of the image.}
+    \label{fig:utm_coordinates}
+\end{figure}
+
+
+% ------------------------------------------------------------------------------
+% 4.3 Remove outliers
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.3}\quad
+\textbf{Remove outliers}
+
+
+% Optional figure:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.65\textwidth]{filename.png}
+%     \caption{GNSS track before and after removal of outliers.}
+%     \label{fig:outliers}
+% \end{figure}
+
+
+% ------------------------------------------------------------------------------
+% 4.4 Simplify the track
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.4}\quad
+\textbf{Simplify the track}
+
+
+% Optional figure:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.65\textwidth]{filename.png}
+%     \caption{Comparison of the original track and simplified route.}
+%     \label{fig:simplified_track}
+% \end{figure}
+
+
+% ------------------------------------------------------------------------------
+% 4.5 Convert to geographic coordinates
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.5}\quad
+\textbf{Convert to geographic coordinates}
+
+
+% ------------------------------------------------------------------------------
+% 4.6 Export as a route plan to QGroundControl software
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.6}\quad
+\textbf{Export as a route plan to QGroundControl software}
+
+
+% Optional figure:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.65\textwidth]{filename.png}
+%     \caption{Route plan in QGroundControl.}
+%     \label{fig:qgc_route}
+% \end{figure}
+
+
+% ------------------------------------------------------------------------------
+% 4.7 Fixed wing optimization
+% ------------------------------------------------------------------------------
+
+\par\medskip
+\noindent\textbf{4.7}\quad
+\textbf{Fixed wing optimization}
+
+
+% Optional figure:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.65\textwidth]{filename.png}
+%     \caption{Track with added Hermite spline interpolation waypoints.}
+%     \label{fig:fixed_wing_optimization}
+% \end{figure}
+
+\end{document}
